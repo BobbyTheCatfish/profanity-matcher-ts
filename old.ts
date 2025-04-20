@@ -1,31 +1,30 @@
 import fs from "fs"
+import path from "path"
 
 class ProfanityMatcher {
 
-  badwords: Set<string>
-  filepath: string
-  constructor(filepath: string = __dirname + "/naughty.txt") {
+  private badwords: Set<string>
+  private filepath: string
+
+
+  constructor(filepath: string = path.join(__dirname, "naughty.txt")) {
+    this.filepath = filepath
+
     const words = fs.readFileSync(filepath, "utf-8").split("\n").map(word => word.toLowerCase())
     this.badwords = new Set(words);
-    this.filepath = filepath
   }
 
-  scan(text: string, highlight = "**") {
+  scan(text: string) {
     // remove meaningless chars and pad with spaces to make detection better
-    const words = text.toLowerCase()
-      .replace(/[-_=\+\/\\\.<>\?\*;\(\)\{\}:]/g, ' ')
-      .split(/[ \n]/)
+    text = ` ${text.toLowerCase().replace(/[-_=\+\/\\\.<>\?\*;\(\)\{\}:,!:\n]/g, ' ').trim()} `
 
     const profane: string[] = []
 
-    for (let i = 0; i < words.length; i++) {
-      if (this.badwords.has(words[i])) {
-        words[i] = `${highlight}${words[i]}${highlight}`
-        profane.push(words[i])
-      }
+    for (const str of this.badwords) {
+      if (text.includes(` ${str} `)) profane.push(str)
     }
 
-    return { profane, highlighted: words }
+    return profane
   }
 
   addWord(word: string) {

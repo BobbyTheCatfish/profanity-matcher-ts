@@ -18,7 +18,8 @@
         "esm": true
     },
     "files": [
-        "index.ts"
+        "old.ts",
+        "trie.ts"
     ],
     "exclude": [
         "dist",
