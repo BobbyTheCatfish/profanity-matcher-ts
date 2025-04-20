@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "moduleResolution": "node10",
+        "declaration": true,
+        "outDir": "./dist",
+        "noEmitOnError": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "skipLibCheck": true,
+        "target": "ES2016",
+        "noImplicitAny": true
+    },
+    "ts-node": {
+        "esm": true
+    },
+    "files": [
+        "index.ts"
+    ],
+    "exclude": [
+        "dist",
+        "node_modules"
+    ]
+}
