@@ -92,7 +92,7 @@ class ProfanityMatcher {
 			this.init();
 		}
 		
-		return exists;
+		return !exists;
 	}
 	
 	removeWord(word: string) {

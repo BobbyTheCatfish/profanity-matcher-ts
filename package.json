@@ -2,7 +2,7 @@
   "name": "profanity-matcher-ts",
   "version": "1.0.0",
   "description": "A fork of https://www.npmjs.com/package/profanity-matcher written in TS with custom file support",
-  "main": "dst/trie.js",
+  "main": "dist/trie.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

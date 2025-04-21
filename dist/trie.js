@@ -72,7 +72,7 @@ class ProfanityMatcher {
             fs_1.default.writeFileSync(this.filepath, [...this.badwordsSet.values()].join("\n"));
             this.init();
         }
-        return exists;
+        return !exists;
     }
     removeWord(word) {
         word = word.toLowerCase();
