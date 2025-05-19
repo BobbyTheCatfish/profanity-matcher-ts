@@ -8,10 +8,11 @@ Extended from [sloankev](https://www.npmjs.com/~sloankev)'s [profanity-scanner](
 ### Example Usage
 
 ```js
-var pf = new Profanity_Scanner("path-to-txt-file")
-pf.scan('hello there!') // returns []
-pf.scan('stfu.') // returns ['stfu']
+const ProfanityMatcher = require("profanity-scanner-ts");
+const pf = new ProfanityMatcher("path-to-txt-file");
+pf.scan('hello there!'); // returns []
+pf.scan('vomit.'); // returns ['stfu']
 
-pf.add_word('noobie') // returns true if added
-pf.remove_word('noobie') // returns true if removed
+pf.addWord('noobie'); // returns true if added
+pf.removeWord('noobie'); // returns true if removed
 ```
