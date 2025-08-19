@@ -5,13 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 class ProfanityMatcher {
-    constructor(filepath = path_1.default.join(__dirname, "naughty.txt")) {
+    constructor(filepath = path_1.default.join(__dirname, "../naughty.txt")) {
         this.badwordsTrie = {};
         this.filepath = filepath;
         const badwords = fs_1.default.readFileSync(this.filepath, "utf-8")
             .split("\n")
             .filter(word => word !== "")
-            .map(word => word.toLowerCase());
+            .map(word => this.normalize(word).join(" "));
         this.badwordsSet = new Set(badwords);
         this.init();
     }
@@ -28,7 +28,7 @@ class ProfanityMatcher {
         const root = {};
         // for each line of the filter
         for (const phrase of this.badwordsSet) {
-            const words = this.normalize(phrase); // split into words
+            const words = phrase.split(" "); // split into words
             let node = root;
             // create an object that looks like
             // { this: { is: { a: { bad: { word: { _end: "this is a bad word" } } } } } }
@@ -42,7 +42,11 @@ class ProfanityMatcher {
         }
         this.badwordsTrie = root;
     }
-    // Scan input text for bad phrases
+    /**
+     * Scan input text for bad words or phrases
+     * @param text The text to scan
+     * @returns Array of detected profanity
+     */
     scan(text) {
         const words = this.normalize(text);
         const profane = [];
@@ -64,8 +68,13 @@ class ProfanityMatcher {
         }
         return profane;
     }
+    /**
+     * Add a word or phrase to the profanity filter
+     * @param word The word or phrase to add
+     * @returns Whether or not it was added (false means it was already in the filter)
+     */
     addWord(word) {
-        word = word.toLowerCase();
+        word = this.normalize(word).join(" ");
         const exists = this.badwordsSet.has(word);
         if (!exists) {
             this.badwordsSet.add(word);
@@ -74,8 +83,13 @@ class ProfanityMatcher {
         }
         return !exists;
     }
+    /**
+     * Remove a word or phrase from the profanity filter
+     * @param word The word or phrase to remove
+     * @returns Whether or not it was removed (false means it wasn't in the filter)
+     */
     removeWord(word) {
-        word = word.toLowerCase();
+        word = this.normalize(word).join(" ");
         if (this.badwordsSet.delete(word)) {
             fs_1.default.writeFileSync(this.filepath, [...this.badwordsSet.values()].join("\n"));
             this.init();
@@ -85,3 +99,4 @@ class ProfanityMatcher {
     }
 }
 module.exports = ProfanityMatcher;
+//# sourceMappingURL=trie.js.map

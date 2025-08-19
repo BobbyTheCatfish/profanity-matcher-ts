@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 class ProfanityMatcher {
-    constructor(filepath = path_1.default.join(__dirname, "naughty.txt")) {
+    constructor(filepath = path_1.default.join(__dirname, "../naughty.txt")) {
         this.filepath = filepath;
         const words = fs_1.default.readFileSync(filepath, "utf-8").split("\n").map(word => word.toLowerCase());
         this.badwords = new Set(words);
@@ -43,3 +43,4 @@ class ProfanityMatcher {
     }
 }
 module.exports = ProfanityMatcher;
+//# sourceMappingURL=old.js.map
