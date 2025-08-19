@@ -11,7 +11,8 @@ Extended from [sloankev](https://www.npmjs.com/~sloankev)'s [profanity-scanner](
 const ProfanityMatcher = require("profanity-scanner-ts");
 const pf = new ProfanityMatcher("path-to-txt-file");
 pf.scan('hello there!'); // returns []
-pf.scan('vomit.'); // returns ['stfu']
+pf.scan('im gonna vomit.'); // returns ['vomit']
+pf.scan("what the h e c k?") // returns ['h e c k']
 
 pf.addWord('noobie'); // returns true if added
 pf.removeWord('noobie'); // returns true if removed

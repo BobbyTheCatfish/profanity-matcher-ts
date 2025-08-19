@@ -7,7 +7,7 @@ class ProfanityMatcher {
   private filepath: string
 
 
-  constructor(filepath: string = path.join(__dirname, "naughty.txt")) {
+  constructor(filepath: string = path.join(__dirname, "../naughty.txt")) {
     this.filepath = filepath
 
     const words = fs.readFileSync(filepath, "utf-8").split("\n").map(word => word.toLowerCase())

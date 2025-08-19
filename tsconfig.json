@@ -12,14 +12,14 @@
         "strictFunctionTypes": true,
         "skipLibCheck": true,
         "target": "ES2016",
-        "noImplicitAny": true
+        "noImplicitAny": true,
+        "sourceMap": true,
     },
     "ts-node": {
         "esm": true
     },
-    "files": [
-        "old.ts",
-        "trie.ts"
+    "include": [
+        "src"
     ],
     "exclude": [
         "dist",

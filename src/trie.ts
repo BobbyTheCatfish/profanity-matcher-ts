@@ -3,19 +3,20 @@ import path from "path"
 
 type InnerTrie = { [word: string]: InnerTrie }
 type TrieNode = InnerTrie & { _end?: string }
+type NormalizedString = string
 
 class ProfanityMatcher {
 	private badwordsTrie: TrieNode = {};
 	private filepath: string
-	private badwordsSet: Set<string>
+	private badwordsSet: Set<NormalizedString>
 
-	constructor(filepath: string = path.join(__dirname, "naughty.txt")) {
+	constructor(filepath: string = path.join(__dirname, "../naughty.txt")) {
 		this.filepath = filepath;
 
 		const badwords = fs.readFileSync(this.filepath, "utf-8")
 			.split("\n")
 			.filter(word => word !== "")
-			.map(word => word.toLowerCase())
+			.map(word => this.normalize(word).join(" "))
 
 		this.badwordsSet = new Set(badwords);
 
@@ -23,7 +24,7 @@ class ProfanityMatcher {
 	}
 
 	// Normalize text: lowercase, remove punctuation, split into words
-	private normalize(text: string): string[] {
+	private normalize(text: string): NormalizedString[] {
 		return text
 			.toLowerCase()
 			.replace(/[^\w\s]/g, '')
@@ -37,7 +38,7 @@ class ProfanityMatcher {
 
 		// for each line of the filter
 		for (const phrase of this.badwordsSet) {
-			const words = this.normalize(phrase); // split into words
+			const words: NormalizedString[] = phrase.split(" "); // split into words
 			let node = root;
 
 			// create an object that looks like
@@ -54,7 +55,11 @@ class ProfanityMatcher {
 		this.badwordsTrie = root;
 	}
 
-	// Scan input text for bad phrases
+	/**
+	 * Scan input text for bad words or phrases
+	 * @param text The text to scan
+	 * @returns Array of detected profanity
+	 */
 	scan(text: string): string[] {
 		const words = this.normalize(text);
 		const profane: string[] = [];
@@ -81,9 +86,13 @@ class ProfanityMatcher {
 		return profane;
 	}
 	
-
+	/**
+	 * Add a word or phrase to the profanity filter
+	 * @param word The word or phrase to add
+	 * @returns Whether or not it was added (false means it was already in the filter)
+	 */
 	addWord(word: string) {
-		word = word.toLowerCase();
+		word = this.normalize(word).join(" ");
 		const exists = this.badwordsSet.has(word)
 		if (!exists) {
 			this.badwordsSet.add(word);
@@ -95,8 +104,13 @@ class ProfanityMatcher {
 		return !exists;
 	}
 	
+	/**
+	 * Remove a word or phrase from the profanity filter
+	 * @param word The word or phrase to remove
+	 * @returns Whether or not it was removed (false means it wasn't in the filter)
+	 */
 	removeWord(word: string) {
-		word = word.toLowerCase();
+		word = this.normalize(word).join(" ");
 		if (this.badwordsSet.delete(word)) {
 			fs.writeFileSync(this.filepath, [...this.badwordsSet.values()].join("\n"))
 		
