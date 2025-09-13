@@ -1,6 +1,9 @@
 import fs from "fs"
 import path from "path"
 
+/**
+ * @deprecated This is the original method and is much slower in comparison
+ */
 class ProfanityMatcher {
 
   private badwords: Set<string>
