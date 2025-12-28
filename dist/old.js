@@ -4,6 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
+/**
+ * @deprecated This is the original method and is much slower in comparison
+ */
 class ProfanityMatcher {
     constructor(filepath = path_1.default.join(__dirname, "../naughty.txt")) {
         this.filepath = filepath;

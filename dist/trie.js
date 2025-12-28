@@ -4,10 +4,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
+function makeRegexGlobal(regex) {
+    return new RegExp(regex.source, regex.flags + "g");
+}
 class ProfanityMatcher {
-    constructor(filepath = path_1.default.join(__dirname, "../naughty.txt")) {
+    constructor(options) {
         this.badwordsTrie = {};
-        this.filepath = filepath;
+        this.removalRegex = /[^\w\s]/g;
+        this.splitRegex = /\s+/;
+        const defaultFilterPath = path_1.default.join(__dirname, "../naughty.txt");
+        if (typeof options === "object") {
+            this.filepath = options.filepath || defaultFilterPath;
+            if (options.removalRegex)
+                this.removalRegex = makeRegexGlobal(options.removalRegex);
+            if (options.splitRegex)
+                this.splitRegex = makeRegexGlobal(options.splitRegex);
+        }
+        else {
+            this.filepath = options || defaultFilterPath;
+        }
         const badwords = fs_1.default.readFileSync(this.filepath, "utf-8")
             .split("\n")
             .filter(word => word !== "")
@@ -19,8 +34,8 @@ class ProfanityMatcher {
     normalize(text) {
         return text
             .toLowerCase()
-            .replace(/[^\w\s]/g, '')
-            .split(/\s+/)
+            .replace(this.removalRegex, '')
+            .split(this.splitRegex)
             .filter(word => word !== "");
     }
     // Build a Trie from the list of bad phrases

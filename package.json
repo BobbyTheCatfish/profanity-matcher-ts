@@ -10,5 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "typescript": "^5.9.3"
   }
 }

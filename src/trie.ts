@@ -5,13 +5,37 @@ type InnerTrie = { [word: string]: InnerTrie }
 type TrieNode = InnerTrie & { _end?: string }
 type NormalizedString = string
 
+type ProfanityMatcherOptions = {
+	filepath?: string
+	/** @description Default: /[^\w\s]/g */
+	removalRegex?: RegExp,
+	/** @description Default: /\s+/*/
+	splitRegex?: RegExp
+}
+
+function makeRegexGlobal(regex: RegExp) {
+	return new RegExp(regex.source, regex.flags + "g")
+}
+
 class ProfanityMatcher {
 	private badwordsTrie: TrieNode = {};
 	private filepath: string
 	private badwordsSet: Set<NormalizedString>
+	private removalRegex: RegExp = /[^\w\s]/g
+	private splitRegex: RegExp = /\s+/
 
-	constructor(filepath: string = path.join(__dirname, "../naughty.txt")) {
-		this.filepath = filepath;
+	constructor(options?: string | ProfanityMatcherOptions) {
+		const defaultFilterPath = path.join(__dirname, "../naughty.txt");
+
+		if (typeof options === "object") {
+			this.filepath = options.filepath || defaultFilterPath;
+
+			if (options.removalRegex) this.removalRegex = makeRegexGlobal(options.removalRegex);
+			if (options.splitRegex) this.splitRegex = makeRegexGlobal(options.splitRegex);
+			
+		} else {
+			this.filepath = options || defaultFilterPath;
+		}
 
 		const badwords = fs.readFileSync(this.filepath, "utf-8")
 			.split("\n")
@@ -27,8 +51,8 @@ class ProfanityMatcher {
 	private normalize(text: string): NormalizedString[] {
 		return text
 			.toLowerCase()
-			.replace(/[^\w\s]/g, '')
-			.split(/\s+/)
+			.replace(this.removalRegex, '')
+			.split(this.splitRegex)
 			.filter(word => word !== "");
 	}
 

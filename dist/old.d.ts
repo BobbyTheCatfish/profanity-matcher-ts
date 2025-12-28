@@ -1,3 +1,6 @@
+/**
+ * @deprecated This is the original method and is much slower in comparison
+ */
 declare class ProfanityMatcher {
     private badwords;
     private filepath;

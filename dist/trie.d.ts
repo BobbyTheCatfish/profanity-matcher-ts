@@ -1,8 +1,17 @@
+type ProfanityMatcherOptions = {
+    filepath?: string;
+    /** @description Default: /[^\w\s]/g */
+    removalRegex?: RegExp;
+    /** @description Default: /\s+/*/
+    splitRegex?: RegExp;
+};
 declare class ProfanityMatcher {
     private badwordsTrie;
     private filepath;
     private badwordsSet;
-    constructor(filepath?: string);
+    private removalRegex;
+    private splitRegex;
+    constructor(options?: string | ProfanityMatcherOptions);
     private normalize;
     private init;
     /**
