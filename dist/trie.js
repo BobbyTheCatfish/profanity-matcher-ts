@@ -5,7 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 function makeRegexGlobal(regex) {
-    return new RegExp(regex.source, regex.flags + "g");
+    let flags = regex.flags;
+    if (!flags.includes("g"))
+        flags += "g";
+    return new RegExp(regex.source, flags);
 }
 class ProfanityMatcher {
     constructor(options) {

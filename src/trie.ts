@@ -14,7 +14,9 @@ type ProfanityMatcherOptions = {
 }
 
 function makeRegexGlobal(regex: RegExp) {
-	return new RegExp(regex.source, regex.flags + "g")
+	let flags = regex.flags;
+	if (!flags.includes("g")) flags += "g"
+	return new RegExp(regex.source, flags)
 }
 
 class ProfanityMatcher {
