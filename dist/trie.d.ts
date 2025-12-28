@@ -20,6 +20,7 @@ declare class ProfanityMatcher {
      * @returns Array of detected profanity
      */
     scan(text: string): string[];
+    saveFilter(): void;
     /**
      * Add a word or phrase to the profanity filter
      * @param word The word or phrase to add

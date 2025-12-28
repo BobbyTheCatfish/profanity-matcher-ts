@@ -83,6 +83,10 @@ class ProfanityMatcher {
         }
         return profane;
     }
+    saveFilter() {
+        fs_1.default.writeFileSync(this.filepath, [...this.badwordsSet.values()].join("\n"));
+        this.init();
+    }
     /**
      * Add a word or phrase to the profanity filter
      * @param word The word or phrase to add
@@ -90,13 +94,12 @@ class ProfanityMatcher {
      */
     addWord(word) {
         word = this.normalize(word).join(" ");
-        const exists = this.badwordsSet.has(word);
-        if (!exists) {
+        const canAdd = !this.badwordsSet.has(word);
+        if (canAdd) {
             this.badwordsSet.add(word);
-            fs_1.default.writeFileSync(this.filepath, [...this.badwordsSet.values()].join("\n"));
-            this.init();
+            this.saveFilter();
         }
-        return !exists;
+        return canAdd;
     }
     /**
      * Remove a word or phrase from the profanity filter
@@ -105,12 +108,10 @@ class ProfanityMatcher {
      */
     removeWord(word) {
         word = this.normalize(word).join(" ");
-        if (this.badwordsSet.delete(word)) {
-            fs_1.default.writeFileSync(this.filepath, [...this.badwordsSet.values()].join("\n"));
-            this.init();
-            return true;
-        }
-        return false;
+        const wasDeleted = this.badwordsSet.delete(word);
+        if (wasDeleted)
+            this.saveFilter();
+        return wasDeleted;
     }
 }
 module.exports = ProfanityMatcher;

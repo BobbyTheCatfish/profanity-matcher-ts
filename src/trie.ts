@@ -110,6 +110,11 @@ class ProfanityMatcher {
 		return profane;
 	}
 	
+	saveFilter() {
+		fs.writeFileSync(this.filepath, [...this.badwordsSet.values()].join("\n"))
+		this.init();
+	}
+
 	/**
 	 * Add a word or phrase to the profanity filter
 	 * @param word The word or phrase to add
@@ -117,15 +122,14 @@ class ProfanityMatcher {
 	 */
 	addWord(word: string) {
 		word = this.normalize(word).join(" ");
-		const exists = this.badwordsSet.has(word)
-		if (!exists) {
+		const canAdd = !this.badwordsSet.has(word)
+
+		if (canAdd) {
 			this.badwordsSet.add(word);
-			fs.writeFileSync(this.filepath, [...this.badwordsSet.values()].join("\n"))
-	
-			this.init();
+			this.saveFilter();
 		}
 		
-		return !exists;
+		return canAdd;
 	}
 	
 	/**
@@ -135,14 +139,11 @@ class ProfanityMatcher {
 	 */
 	removeWord(word: string) {
 		word = this.normalize(word).join(" ");
-		if (this.badwordsSet.delete(word)) {
-			fs.writeFileSync(this.filepath, [...this.badwordsSet.values()].join("\n"))
+		const wasDeleted = this.badwordsSet.delete(word);
 		
-			this.init();
-			return true;
-		}
+		if (wasDeleted) this.saveFilter();
 		
-		return false;
+		return wasDeleted;
 	}
 }
 
